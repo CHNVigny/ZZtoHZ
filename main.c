@@ -82,12 +82,13 @@ void main()
 	void change(char str[], char exp[]);
 	double CalResult(char exp[]);//计算后缀表达式
 	double Directcalresult(char str[]);
-	int check(char str[], char chestr[100]);
-	char str[100], exp[100], chestr[100];//str存储原算数表达式，exp存储对应的后缀表达式，chestr存储容错字符'^'
+	//int check(char str[], char chestr[100]);
+	char str[100], exp[100]/*, chestr[100]*/;//str存储原算数表达式，exp存储对应的后缀表达式，chestr存储容错字符'^'
 	do
 	{
 		printf("输入算数表达式：\n");
 		gets(str);
+		/*
 		if (check(str, chestr))
 		{
 			printf("表达式错在:\n");
@@ -106,6 +107,7 @@ void main()
 				exit(-1);
 			}
 		}
+		*/
 		change(str, exp);
 		printf("后缀表达式是：%s\n", exp);
 		printf("运算结果为：%f\n", CalResult(exp));
@@ -158,7 +160,7 @@ void change(char str[], char ch[])//中缀转后缀
 			}
 			pop(&st);//去掉左括号
 		}
-		if (c == '+' || c = '-')//加减号
+		if (c == '+' || c == '-')//加减号
 		{
 			op.op = c;
 			op.level = 1;//
@@ -181,7 +183,7 @@ void change(char str[], char ch[])//中缀转后缀
 				push(&st, op);//此时栈顶的优先级没有op高了，将op入栈
 			}
 		}
-		if (c=='+'||c=='/'||c++'%')
+		if (c=='+'||c=='/'||c=='%')
 		{
 			op.op = c;
 			op.level = 2;
