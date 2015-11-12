@@ -44,7 +44,7 @@ typedef struct    //浮点数栈
 
 void InitStack1(pStack1 ps)//初始化操作符栈
 {
-	ps->Top = (pNode)malloc(sizeof(OpNode));        //    分配内存空间给栈顶
+	ps->Top = (pNode1)malloc(sizeof(OpNode));        //    分配内存空间给栈顶
 	if (NULL == ps->Top)
 	{
 		printf("动态分配内存失败\n");
@@ -88,7 +88,7 @@ bool Push1(pStack1 ps, char op, int level)//向字符栈里压栈
 	return true;
 }
 
-bool Push2(pStack ps, double num)//向字符栈里压栈
+bool Push2(pStack2 ps, double num)//向字符栈里压栈
 {
 	pNode2 pNew = (pNode2)malloc(sizeof(NumNode));    //    定义一个新节点，并分配内存空间
 	if (NULL == pNew)
@@ -124,9 +124,9 @@ bool Empty2(pStack2 ps)
 	}
 }
 
-char Pop1(pStack1 ps)
+OpNode Pop1(pStack1 ps)
 {
-	char ret;
+	OpNode ret;
 	pNode1 Swap = NULL;
 	if (Empty(ps))
 	{
@@ -134,7 +134,8 @@ char Pop1(pStack1 ps)
 	}
 	else
 	{
-		ret = ps->Top->op;
+		ret.op = ps->Top->op;
+		ret.level = ps->Top->level;
 		Swap = ps->Top;
 		ps->Top = ps->Top->Next;
 		free(Swap);
@@ -142,9 +143,9 @@ char Pop1(pStack1 ps)
 	}
 }
 
-double Pop2(pStack2 ps)
+NumNode Pop2(pStack2 ps)
 {
-	double ret;
+	NumNode ret;
 	pNode2 Swap = NULL;
 	if (Empty(ps))
 	{
@@ -152,7 +153,7 @@ double Pop2(pStack2 ps)
 	}
 	else
 	{
-		ret = ps->Top->num;
+		ret.num = ps->Top->num;
 		Swap = ps->Top;
 		ps->Top = ps->Top->Next;
 		free(Swap);
@@ -160,18 +161,124 @@ double Pop2(pStack2 ps)
 	}
 }
 
-char Top1(pStack1 ps)//返回栈顶元素
+OpNode Top1(pStack1 ps)//返回栈顶元素
 {
-	char ret;
-	ret = ps->Top->op;
+	OpNode ret;
+	ret.op = ps->Top->op;
+	ret.level = ps->Top->level;
 	return ret;
 }
 
-double Top2(pStack2 ps)//返回栈顶元素
+NumNode Top2(pStack2 ps)//返回栈顶元素
 {
-	double ret;
-	ret = ps->Top->num;
+	NumNode ret;
+	ret.num = ps->Top->num;
 	return ret;
+}
+
+void change(char str[], char *ch)//中缀转后缀
+{
+	int i = 0;//str的索引
+	int k = 0;
+	char c;//字符串中取出的放在c
+	Stack1 st;//符号栈
+	char opp;//op.op
+
+	OpNode op;
+	OpNode ops;
+	InitStack1(&st);//符号栈初始化
+	c = str[i++];
+	while (c != '\0')
+	{
+		if ((c >= '0'&&c <= '9') || c == '.')
+		{
+			while ((c >= '0'&&c <= '9') || c == '.')
+			{
+				ch[k++] = c;//将字符直接放到数组中
+				c = str[i++];
+			}
+			ch[k++] = ' ';
+		}
+		if (c == '(')
+		{
+			op.op = '(';
+			op.level = -1;//优先级
+			Push1(&st, c, -1);
+		}
+		if (c == ')')
+		{
+			op = Top1(&st);//看栈顶
+			while (!Empty1(&st) && op.op != '(')
+			{
+				op = Pop1(&st);
+				ch[k++] = op.op;
+				if (!Empty(&st))
+				{
+					op = Top1(&st);
+				}
+				else
+					break;//栈空就结束
+			}
+			Pop1(&st);//去掉左括号
+		}
+		if (c == '+' || c == '-')//加减号
+		{
+			op.op = c;
+			op.level = 1;//
+			if (Empty(&st))//空栈
+			{
+				Push1(&st, c, 1);//直接入栈
+			}
+			else
+			{
+				ops = Top1(&st);
+				while (ops.level >= op.level)
+				{
+					ops = Pop1(&st);
+					ch[k++] = ops.op;
+					if (!Empty1(&st))
+						ops = Top1(&st);
+					else
+						break;
+				}
+				Push1(&st, c, 1);//此时栈顶的优先级没有op高了，将op入栈
+			}
+		}
+		if (c == '+' || c == '/' || c == '%')
+		{
+			op.op = c;
+			op.level = 2;
+			if (Empty1(&st))//空栈
+			{
+				Push1(&st, c, 2);//栈空即入栈
+			}
+		}
+		else
+		{
+			{
+				ops = Top1(&st);
+				while (ops.level >= op.level)
+				{
+					ops = Pop1(&st);
+					ch[k++] = ops.op;
+					if (!Empty1(&st))//栈不为空
+					{
+						ops = Top1(&st);
+					}
+					else
+						break;
+				}
+				Push1(&st, c, 2);//此时栈顶优先级低，入栈。
+			}
+		}
+		c = str[i++];
+	}
+	while (!Empty1(&st))//最后判断栈是否为空
+	{
+		ops = Pop1(&st);//取出栈内元素存入数组中
+		ch[k++] = ops.op;
+	}
+	ch[k] = '\0';
 }
 
 int main()
@@ -181,46 +288,16 @@ int main()
 	int rOpd, lOpd, result;
 	char b;
 	char c;//接弹出元素
-	char *d = (char*)malloc(N*sizeof(char));//100个元素的数组，用于存放后缀表达式
-	char *a = (char*)malloc(N*sizeof(char));
-	SuanShi BDA[100];
-	Stack s;
-	Stack s2;
-	InitStack(&s);
-	InitStack(&s2);
+	char a[100], b[100];//a(str)存储原算数表达式，b(exp)存储对应的后缀表达式
+	Stack1 s1;//操作符栈
+	Stack2 s2;//数栈
+	InitStack1(&s1);
+	InitStack2(&s2);
 	printf("请输入中缀表达式：\n");
 	gets(a);
 	n = strlen(a);
 	a[n] = '\0';
-	j = 0;
-	for (i = 0;i < n;i++)
-	{
-		b = a[i];
-		if (a[i] > 47 && a[i] < 58)
-		{
-			if (i == 0 || a[i - 1] == 37 || a[i - 1] == 40 || a[i - 1] == 41 || a[i - 1] == 42 || a[i - 1] == 43 || a[i - 1] == 45 || a[i - 1] == 47)
-			{
-				BDA[j].num = a[i];
-				if (a[i + 1] == 37 || a[i + 1] == 40 || a[i + 1] == 41 || a[i + 1] == 42 || a[i + 1] == 43 || a[i + 1] == 45 || a[i + 1] == 47)
-				{
-					j = j + 1;
-				}
-			}
-			else if (a[i - 1] > 47 && a[i - 1] < 58)
-			{
-				BDA[j].num = BDA[j].num * 10 + a[i];
-				if (a[i + 1] == 37 || a[i + 1] == 40 || a[i + 1] == 41 || a[i + 1] == 42 || a[i + 1] == 43 || a[i + 1] == 45 || a[i + 1] == 47)
-				{
-					j = j + 1;
-				}
-			}
-			else
-			{
-				BDA[j].op = a[i];
-				j = j + 1;
-			}
-		}
-	}
+	
 	printf("后缀表达式为：\n");
 	j = 0;
 	for (i = 0;i < n;i++)
