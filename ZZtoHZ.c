@@ -16,17 +16,17 @@ typedef struct huozhui *Next;
 }
 void CreateList()
 */
-typedef struct    //操作符栈节点
+typedef struct node1    //操作符栈节点
 {
 	char op;//字符
 	int level;//优先级
-	OpNode *Next;//指针域
+	struct node1 *Next;//指针域
 }OpNode, *pNode1;
 
-typedef struct    //浮点数栈节点
+typedef struct node2    //浮点数栈节点
 {
 	double num;
-	NumNode *Next;
+	struct node2 *Next;
 }NumNode, *pNode2;
 
 //    定义一个操作符栈结构
@@ -128,7 +128,7 @@ OpNode Pop1(pStack1 ps)
 {
 	OpNode ret;
 	pNode1 Swap = NULL;
-	if (Empty(ps))
+	if (Empty1(ps))
 	{
 		exit(0);
 	}
@@ -147,7 +147,7 @@ NumNode Pop2(pStack2 ps)
 {
 	NumNode ret;
 	pNode2 Swap = NULL;
-	if (Empty(ps))
+	if (Empty2(ps))
 	{
 		exit(0);
 	}
@@ -176,14 +176,13 @@ NumNode Top2(pStack2 ps)//返回栈顶元素
 	return ret;
 }
 
-void change(char str[], char *ch)//中缀转后缀
+void change(char str[], char ch[])//中缀转后缀
 {
 	int i = 0;//str的索引
 	int k = 0;
+	int a;
 	char c;//字符串中取出的放在c
 	Stack1 st;//符号栈
-	char opp;//op.op
-
 	OpNode op;
 	OpNode ops;
 	InitStack1(&st);//符号栈初始化
@@ -208,11 +207,12 @@ void change(char str[], char *ch)//中缀转后缀
 		if (c == ')')
 		{
 			op = Top1(&st);//看栈顶
-			while (!Empty1(&st) && op.op != '(')
+			a = Empty1(&st);
+			while (a!=1 && op.op != '(')
 			{
 				op = Pop1(&st);
 				ch[k++] = op.op;
-				if (!Empty(&st))
+				if (!Empty1(&st))
 				{
 					op = Top1(&st);
 				}
@@ -225,7 +225,7 @@ void change(char str[], char *ch)//中缀转后缀
 		{
 			op.op = c;
 			op.level = 1;//
-			if (Empty(&st))//空栈
+			if (Empty1(&st))//空栈
 			{
 				Push1(&st, c, 1);//直接入栈
 			}
@@ -261,7 +261,8 @@ void change(char str[], char *ch)//中缀转后缀
 				{
 					ops = Pop1(&st);
 					ch[k++] = ops.op;
-					if (!Empty1(&st))//栈不为空
+					a = Empty1(&st);
+					if (a != 1)//栈不为空
 					{
 						ops = Top1(&st);
 					}
@@ -273,7 +274,8 @@ void change(char str[], char *ch)//中缀转后缀
 		}
 		c = str[i++];
 	}
-	while (!Empty1(&st))//最后判断栈是否为空
+	a = Empty1(&st);
+	while (a != 1)//最后判断栈是否为空
 	{
 		ops = Pop1(&st);//取出栈内元素存入数组中
 		ch[k++] = ops.op;
@@ -288,7 +290,8 @@ int main()
 	int rOpd, lOpd, result;
 	char b;
 	char c;//接弹出元素
-	char a[100], b[100];//a(str)存储原算数表达式，b(exp)存储对应的后缀表达式
+	char a[100];
+	char b[100];//a(str)存储原算数表达式，b(exp)存储对应的后缀表达式
 	Stack1 s1;//操作符栈
 	Stack2 s2;//数栈
 	InitStack1(&s1);
@@ -297,156 +300,9 @@ int main()
 	gets(a);
 	n = strlen(a);
 	a[n] = '\0';
+	change(a, b);
+	printf("后缀表达式为：%s\n",b);
 	
-	printf("后缀表达式为：\n");
-	j = 0;
-	for (i = 0;i < n;i++)
-	{
-
-		b = a[i];
-		if (b > 47 && b < 58)
-		{
-			printf("%c", b);
-			d[j] = b;
-			j += 1;
-		}
-		else if (b == 37 || b == 40 || b == 41 || b == 42 || b == 43 || b == 45 || b == 47)
-		{
-			if (b != ')' && (Empty(&s) || Top(&s) == '('))
-			{
-				Push(&s, b);
-			}
-			else
-			{
-				switch (b)
-				{
-				case '(':
-					Push(&s, b);
-					break;
-				case ')':
-					while (Top(&s) != '(')
-					{
-						c = Pop(&s);
-						d[j] = c;
-						j += 1;
-						printf("%c", c);
-
-					}
-					if (Top(&s) == '(')
-					{
-						Pop(&s);
-					}
-					break;
-				case '%':
-					if (Top(&s) == '+' || Top(&s) == '-' || Top(&s) == '(')
-					{
-						Push(&s, b);
-					}
-					else if (Top(&s) == '/' || Top(&s) == '*' || Top(&s) == '%')
-					{
-						c = Pop(&s);
-						d[j] = c;
-						j += 1;
-						printf("%c", c);
-						Push(&s, b);
-					}
-					break;
-				case '*':
-
-					if (Top(&s) == '+' || Top(&s) == '-' || Top(&s) == '(')
-					{
-						Push(&s, b);
-					}
-					else if (Top(&s) == '/' || Top(&s) == '*' || Top(&s) == '%')
-					{
-						c = Pop(&s);
-						d[j] = c;
-						j += 1;
-						printf("%c", c);
-						Push(&s, b);
-					}
-					else
-					{
-						d[j] = b;
-						j += 1;
-						printf("%c", b);
-					}
-					break;
-				case '/':
-					if (Top(&s) == '+' || Top(&s) == '-' || Top(&s) == '(')
-					{
-						Push(&s, b);
-					}
-					else if (Top(&s) == '/' || Top(&s) == '*' || Top(&s) == '%')
-					{
-						c = Pop(&s);
-						d[j] = c;
-						j += 1;
-						printf("%c", c);
-						Push(&s, b);
-					}
-					else
-					{
-						d[j] = b;
-						j += 1;
-						printf("%c", b);
-
-					}
-					break;
-				case '+':
-					if ('(' == Top(&s))
-					{
-						Push(&s, b);
-					}
-					else if (Top(&s) == '-' || Top(&s) == '+')
-					{
-						c = Pop(&s);
-						d[j] = c;
-						j += 1;
-						printf("%c", c);
-						Push(&s, b);
-					}
-					else
-					{
-						d[j] = b;
-						j += 1;
-						printf("%c", b);
-
-					}
-					break;
-				case '-':
-					if (Top(&s) == '(')
-					{
-						Push(&s, b);
-					}
-					else if (Top(&s) == '-' || Top(&s) == '+')
-					{
-						c = Pop(&s);
-						d[j] = c;
-						j += 1;
-						printf("%c", c);
-						Push(&s, b);
-					}
-					else
-					{
-						d[j] = b;
-						j += 1;
-						printf("%c", b);
-
-					}
-					break;
-				}
-			}
-		}
-	}
-	while (!Empty(&s))
-	{
-		c = Pop(&s);
-		d[j] = c;
-		j += 1;
-		printf("%c", c);
-
-	}
 	/*
 	printf("\n");
 	for (i=0;i<j;i++)
@@ -454,6 +310,10 @@ int main()
 	printf("%c",d[i]);
 	}
 	*/
+
+
+
+	/*
 	for (i = 0; i < j; i++)
 	{
 		b = d[i];
@@ -502,7 +362,7 @@ int main()
 	printf("\n");
 	printf("后缀表达式的值为：\n");
 	result = (int)Pop(&s2);
-	printf("%d", result);
+	printf("%d", result);*/
 	return 0;
 
 }
