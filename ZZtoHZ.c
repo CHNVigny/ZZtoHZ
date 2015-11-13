@@ -176,8 +176,15 @@ NumNode Top2(pStack2 ps)//返回栈顶元素
 	return ret;
 }
 
-void change(char str[], char ch[])//中缀转后缀
+int main()
 {
+	int n;//输入数组的长度
+	char str[100];//中缀
+	char ch[100];//后缀表达式
+	Stack1 s1;//操作符栈
+	Stack2 s2;//数栈
+	InitStack1(&s1);
+	InitStack2(&s2);
 	int i = 0;//str的索引
 	int k = 0;
 	int a;
@@ -185,7 +192,10 @@ void change(char str[], char ch[])//中缀转后缀
 	Stack1 st;//符号栈
 	OpNode op;
 	OpNode ops;
-	InitStack1(&st);//符号栈初始化
+	printf("请输入中缀表达式：\n");
+	gets(str);
+	n = strlen(str);
+	str[n] = '\0';
 	c = str[i++];
 	while (c != '\0')
 	{
@@ -208,7 +218,7 @@ void change(char str[], char ch[])//中缀转后缀
 		{
 			op = Top1(&st);//看栈顶
 			a = Empty1(&st);
-			while (a!=1 && op.op != '(')
+			while (a != 1 && op.op != '(')
 			{
 				op = Pop1(&st);
 				ch[k++] = op.op;
@@ -281,88 +291,7 @@ void change(char str[], char ch[])//中缀转后缀
 		ch[k++] = ops.op;
 	}
 	ch[k] = '\0';
-}
-
-int main()
-{
-	int n;//输入数组的长度
-	int i, j;//用于循环
-	int rOpd, lOpd, result;
-	char b;
-	char c;//接弹出元素
-	char a[100];
-	char b[100];//a(str)存储原算数表达式，b(exp)存储对应的后缀表达式
-	Stack1 s1;//操作符栈
-	Stack2 s2;//数栈
-	InitStack1(&s1);
-	InitStack2(&s2);
-	printf("请输入中缀表达式：\n");
-	gets(a);
-	n = strlen(a);
-	a[n] = '\0';
-	change(a, b);
-	printf("后缀表达式为：%s\n",b);
-	
-	/*
-	printf("\n");
-	for (i=0;i<j;i++)
-	{
-	printf("%c",d[i]);
-	}
-	*/
-
-
-
-	/*
-	for (i = 0; i < j; i++)
-	{
-		b = d[i];
-		if (b > 47 && b < 58)
-		{
-			n = b - 48;
-			Push(&s2, n);
-		}
-		else if (b == 37 || b == 42 || b == 43 || b == 45 || b == 47)
-		{
-			switch (b)
-			{
-			case '+':
-				rOpd = (int)Pop(&s2);
-				lOpd = (int)Pop(&s2);
-				result = lOpd + rOpd;
-				Push(&s2, result);
-				break;
-			case '-':
-				rOpd = (int)Pop(&s2);
-				lOpd = (int)Pop(&s2);
-				result = lOpd - rOpd;
-				Push(&s2, result);
-				break;
-			case '*':
-				rOpd = (int)Pop(&s2);
-				lOpd = (int)Pop(&s2);
-				result = lOpd*rOpd;
-				Push(&s2, result);
-				break;
-			case '/':
-				rOpd = (int)Pop(&s2);
-				lOpd = (int)Pop(&s2);
-				result = lOpd / rOpd;
-				Push(&s2, result);
-				break;
-			case '%':
-				rOpd = (int)Pop(&s2);
-				lOpd = (int)Pop(&s2);
-				result = lOpd%rOpd;
-				Push(&s2, result);
-				break;
-			}
-		}
-	}
-	printf("\n");
-	printf("后缀表达式的值为：\n");
-	result = (int)Pop(&s2);
-	printf("%d", result);*/
+	printf("后缀表达式为：%s\n",ch);
+	system("pause");
 	return 0;
-
 }

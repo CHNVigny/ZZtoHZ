@@ -1,14 +1,14 @@
-﻿生成启动时间为 2015/11/13 1:47:48。
-     1>项目“E:\GitHub\ZZtoHZ\ZZtoHZ.vcxproj”在节点 2 上(Rebuild 个目标)。
+﻿生成启动时间为 2015/11/13 18:07:11。
+     1>项目“E:\GitHub\ZZtoHZ\ZZtoHZ.vcxproj”在节点 2 上(Build 个目标)。
      1>ClCompile:
          D:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TC /analyze- /errorReport:prompt ZZtoHZ.c
          ZZtoHZ.c
-     1>e:\github\zztohz\zztohz.c(294): error C2040: “b”:“char [100]”与“char”的间接寻址级别不同
-     1>e:\github\zztohz\zztohz.c(300): warning C4013: “gets”未定义；假设外部返回 int
-     1>e:\github\zztohz\zztohz.c(303): warning C4047: “函数”:“char *”与“char”的间接级别不同
-     1>e:\github\zztohz\zztohz.c(303): warning C4024: “change”: 形参和实参 2 的类型不同
-     1>已完成生成项目“E:\GitHub\ZZtoHZ\ZZtoHZ.vcxproj”(Rebuild 个目标)的操作 - 失败。
+     1>e:\github\zztohz\zztohz.c(196): warning C4013: “gets”未定义；假设外部返回 int
+       Link:
+         D:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"E:\C_ProgramingLanguage\Homeworks\shujujiegou\Project1\Debug\ZZtoHZ.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"E:\C_ProgramingLanguage\Homeworks\shujujiegou\Project1\Debug\ZZtoHZ.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"E:\C_ProgramingLanguage\Homeworks\shujujiegou\Project1\Debug\ZZtoHZ.lib" /MACHINE:X86 Debug\ZZtoHZ.obj
+         ZZtoHZ.vcxproj -> E:\C_ProgramingLanguage\Homeworks\shujujiegou\Project1\Debug\ZZtoHZ.exe
+     1>已完成生成项目“E:\GitHub\ZZtoHZ\ZZtoHZ.vcxproj”(Build 个目标)的操作。
 
-生成失败。
+已成功生成。
 
-已用时间 00:00:00.36
+已用时间 00:00:00.62
